@@ -21,3 +21,4 @@
   102-tree                          -         A Script that creates directories recursively.
   103-commas                        -         List all files and directories in the current directory and separate them with a comma.
   school.mgc                        -         Creating a magic file.
+</pre>
