@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# fizzbuzz test
+
+for ((num=1; num<=100; num++))
+do
+	if [ $((num % 15)) -eq 0 ]; then
+		echo "FizzBuzz"
+	elif [ $((num % 3)) -eq 0 ]; then
+		echo "Fizz"
+	elif [ $((num % 5)) -eq 0 ]; then
+		echo "Buzz"
+	else
+		echo $num
+	fi
+done
