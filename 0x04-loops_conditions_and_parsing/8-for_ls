@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# script displays list format, content of the current directory
+
+for item in *
+do
+	if [ -f "$item" ] || [ -d "$item" ]; then
+	only_names=$(echo "$item" | cut -d '-' -f2- )
+	echo "$only_names"
+
+	fi
+done
