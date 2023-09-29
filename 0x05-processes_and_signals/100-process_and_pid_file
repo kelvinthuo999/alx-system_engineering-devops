@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
-# This script performs various actions on signals.
 # The script does the following:
-# - Creates the file /var/run/myscript.pid containing its PID
-# - Displays To infinity and beyond indefinitely
-# - Displays I hate the kill command when receiving a SIGTERM signal
-# - Displays Y U no love me?! when receiving a SIGINT signal
-# - Deletes the file /var/run/myscript.pid and terminates itself when receiving a SIGQUIT or SIGTERM signal
+# Creates the file /var/run/myscript.pid containing its PID
+# Displays To infinity and beyond indefinitely
+# Displays I hate the kill command when receiving a SIGTERM signal
+# Displays Y U no love me?! when receiving a SIGINT signal
+# Deletes the file /var/run/myscript.pid and terminates itself when receiving a SIGQUIT or SIGTERM signal
 
 # Function to handle SIGTERM and SIGQUIT signals
 terminate() {
