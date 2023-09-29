@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# script performs various actions on signals.
+# This script performs various actions on signals.
 
 # Function to handle SIGTERM and SIGQUIT signals
 terminate() {
@@ -21,6 +21,7 @@ trap 'interrupt' SIGINT
 # Create a PID file
 echo "$$" > /var/run/myscript.pid
 
+# Display messages indefinitely
 while true; do
     echo "To infinity and beyond"
     sleep 2
