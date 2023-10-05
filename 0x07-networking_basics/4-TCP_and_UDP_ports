@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# A script that shows listening ports
+# A script that shows the PID and name of the program to which each socket belongs
+
+# Check if the script is run with root (sudo) privileges
+if [ "$EUID" -ne 0 ]; then
+  echo "Please run this script with sudo or as root."
+  exit 1
+fi
+
+# Use netstat to list listening ports and associated program names
+netstat -l --program
+
+# Exit
+exit 0
