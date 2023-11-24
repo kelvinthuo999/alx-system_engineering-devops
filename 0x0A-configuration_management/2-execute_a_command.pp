@@ -1,0 +1,2 @@
+# Manifest: Execute a command
+
