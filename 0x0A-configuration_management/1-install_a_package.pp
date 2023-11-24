@@ -1,3 +1,4 @@
+#!/usr/bin/pup
 # Manifest: Install Flask using pip3
 
 class { 'python':
