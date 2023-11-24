@@ -1,0 +1,2 @@
+# NOTES
+- Writing puppet files
