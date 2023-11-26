@@ -1,0 +1,6 @@
+# documentation to configure server to connect easily
+Host *
+    HostName 100.25.104.64
+    IdentityFile ~/.ssh/school
+    PreferredAuthentications publickey
+    PasswordAuthentication no
