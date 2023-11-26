@@ -4,7 +4,7 @@
 # Variables
 private_key="~/.ssh/school"
 user="ubuntu"
-server="100.25.133.23" the actual server IP or hostname
+server="100.25.140.6" the actual server IP or hostname
 
 # SSH connection using single-character flags
 ssh -i "$private_key" "$user@$server"
