@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
-# Install and configure nginx
-# to return 'Hello World!' on a GET request
-# to /
+# Install Nginx, configure it to listen on port 80, and print "Hello World"
 
-function install_and_configure_nginx(){
+function nginx_install_config(){
     sudo apt-get update
     sudo apt-get -y install nginx
     echo 'Hello World!' > /var/www/html/index.html
     service nginx start
 
 }
-install_and_configure_nginx;
+nginx_install_config;
