@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Bash script to install and configure Nginx on a new Ubuntu machine
+
+# Update package lists
+sudo apt-get update
+
+# Install Nginx
+sudo apt-get install -y nginx
+
+# Configure Nginx to listen on port 80
+sudo sed -i 's/80 default_server/80 default_server;/g' /etc/nginx/sites-available/default
+
+# Restart Nginx using the service command
+sudo service nginx restart
+
+# Create an HTML page with "Hello World!"
+echo '<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello World!</title>
+</head>
+<body>
+    <h1>Hello World!</h1>
+</body>
+</html>' | sudo tee /var/www/html/index.html > /dev/null
