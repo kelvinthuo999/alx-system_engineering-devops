@@ -13,7 +13,7 @@ exec { 'update packages':
 
 # Install nginx
 package { 'nginx':
-  ensure => 'installed',
+  ensure  => 'installed',
   require => Exec['update packages'],
 }
 
@@ -43,20 +43,37 @@ file { '/var/www/html/404.html':
 # Add redirection and error page
 file { '/etc/nginx/sites-enabled/default':
   ensure  => 'file',
-  content => template('path/to/your/nginx_config.erb'),
+  content => 'server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+        root /var/www/html;
+        index index.html index.htm index.nginx-debian.html;
+        server_name _;
+        location / {
+                try_files $uri $uri/ =404;
+        }
+        error_page 404 /404.html;
+        location  /404.html {
+            internal;
+        }
+        if ($request_filename ~ redirect_me){
+            rewrite ^ https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;
+        }
+}
+',
   require => Package['nginx'],
 }
 
 # Restart nginx
 service { 'nginx':
-  ensure     => 'running',
-  enable     => true,
-  subscribe  => [Exec['add nginx stable repo'], Exec['update packages'], Package['nginx']],
+  ensure    => 'running',
+  enable    => true,
+  subscribe => [Exec['add nginx stable repo'], Exec['update packages'], Package['nginx']],
 }
 
 # Notify exec to restart nginx if the configuration changes
 exec { 'restart nginx':
-  command   => 'service nginx restart',
+  command     => 'service nginx restart',
   refreshonly => true,
-  subscribe => File['/etc/nginx/sites-enabled/default'],
+  subscribe   => File['/etc/nginx/sites-enabled/default'],
 }
