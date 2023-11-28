@@ -1,25 +1,27 @@
 #!/usr/bin/env bash
-# Install Nginx, configure it to listen on port 80, and print "Hello World"
+# Install and configure nginx
+# to return 'Hello World!' on a GET request to /
 
-# Update package lists
-sudo apt-get -y update
+function install_and_configure_nginx() {
+    # Update package lists
+    sudo apt-get update
 
-# Install Nginx
-sudo apt-get -y install nginx
+    # Install Nginx
+    sudo apt-get -y install nginx
 
-# Configure Nginx to listen on port 80
-sudo sed -i 's/80 default_server/80 default_server;/g' /etc/nginx/sites-available/default
+    # Configure Nginx to return 'Hello World!' on a GET request to /
+    echo 'server {
+        listen 80 default_server;
+        server_name _;
+        root /var/www/html;
 
-# Restart Nginx using the service command
-sudo service nginx restart
+        location / {
+            return 200 "Hello World!";
+        }
+    }' | sudo tee /etc/nginx/sites-available/default > /dev/null
 
-# Create an HTML page with "Hello World!"
-echo '<!DOCTYPE html>
-<html>
-<head>
-    <title>Hello World!</title>
-</head>
-<body>
-    <h1>Hello World!</h1>
-</body>
-</html>' | sudo tee /var/www/html/index.nginx-debian.html > /dev/null
+    # Restart Nginx using the service command
+    sudo service nginx restart
+}
+
+install_and_configure_nginx
