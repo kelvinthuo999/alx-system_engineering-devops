@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# This script configures Nginx to include a custom HTTP header in its responses.
+# This script configures Nginx with additional features, including a custom HTTP header.
 
 # Install Nginx if not already installed
 sudo apt-get update
@@ -12,5 +12,32 @@ custom_header_value=$(hostname)
 # Add configuration for the custom header in the Nginx default site configuration
 echo "add_header $custom_header_name $custom_header_value;" | sudo tee -a /etc/nginx/sites-available/default
 
+# Additional Nginx configurations
+server_conf="server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+    server_name _;
+    add_header $custom_header_name $custom_header_value;
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+    location /redirect_me {
+        rewrite ^ https://youtube.com/watch?v=QH2-TGUlwu4 permanent;
+    }
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+    }
+}"
+
+# Apply the additional Nginx configurations
+echo -e "$server_conf" | sudo tee /etc/nginx/sites-available/default
+
 # Reload Nginx to apply the changes
-sudo systemctl reload nginx
+if [[ $(pgrep nginx) ]]; then
+    sudo nginx -s reload
+else
+    sudo service nginx start
+fi
