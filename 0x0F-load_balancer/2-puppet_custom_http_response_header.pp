@@ -1,43 +1,32 @@
-# File: custom_header_setup.pp
+# Puppet manifest to install and configure Nginx with a custom HTTP header
 
-class custom_header_setup {
-
-  $custom_header_name = 'X-Served-By'
-  $custom_header_value = $::hostname
-
-  # Install Nginx package
-  class { 'nginx':
-    manage_repo => true,
-  }
-
-  # Define the default site configuration
-  file { '/etc/nginx/sites-available/default':
-    ensure  => file,
-    content => template('custom_header_setup/default_site.erb'),
-    require => Class['nginx'],
-    notify  => Service['nginx'],
-  }
-
-  # Define the Nginx service
-  service { 'nginx':
-    ensure  => running,
-    enable  => true,
-    require => File['/etc/nginx/sites-available/default'],
-  }
-
+# Ensure apt is up-to-date
+package { 'apt-update':
+  ensure => latest,
 }
 
-# File: templates/default_site.erb
+# Install Nginx
+package { 'nginx':
+  ensure => installed,
+  require => Package['apt-update'],
+}
 
+# Custom HTTP header value
+$custom_header_value = $facts['hostname']
+
+# Define Nginx site configuration with custom HTTP header
+file { '/etc/nginx/sites-available/default':
+  ensure  => present,
+  content => "
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
     root /var/www/html;
     index index.html index.htm index.nginx-debian.html;
     server_name _;
-    add_header <%= @custom_header_name %> <%= @custom_header_value %>;
+    add_header X-Served-By $custom_header_value;
     location / {
-        try_files $uri $uri/ =404;
+        try_files \$uri \$uri/ =404;
     }
     location /redirect_me {
         rewrite ^ https://youtube.com/watch?v=QH2-TGUlwu4 permanent;
@@ -46,4 +35,20 @@ server {
     location = /404.html {
         internal;
     }
+}",
+  require => Package['nginx'],
+  notify  => Service['nginx'],
+}
+
+# Nginx service configuration
+service { 'nginx':
+  ensure  => running,
+  enable  => true,
+}
+
+# Notify systemd to reload Nginx when the site configuration changes
+exec { 'reload_nginx':
+  command     => 'systemctl reload nginx',
+  refreshonly => true,
+  subscribe   => File['/etc/nginx/sites-available/default'],
 }
