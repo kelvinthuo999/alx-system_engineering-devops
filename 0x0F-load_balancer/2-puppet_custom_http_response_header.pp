@@ -1,9 +1,16 @@
 # Puppet manifest to install and configure Nginx with a custom HTTP header
 
-exec { 'command':
-  command  => 'apt-get -y update;
-  apt-get -y install nginx;
-  sudo sed -i "/listen 80 default_server;/a add_header X-Served-By $HOSTNAME;" /etc/nginx/sites-available/default;
-  service nginx restart',
-  provider => shell,
+package { 'nginx':
+  ensure  => 'installed',
+}
+
+file { '/etc/nginx/sites-available/default':
+  ensure  => file,
+  content => "server {\n    listen 80 default_server;\n    add_header X-Served-By ${::hostname};\n}\n",
+  notify  => Service['nginx'],
+}
+
+service { 'nginx':
+  ensure  => 'running',
+  enable  => true,
 }
