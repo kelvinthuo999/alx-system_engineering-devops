@@ -1,0 +1,2 @@
+# NOTES
+- Load balancing concepts.
