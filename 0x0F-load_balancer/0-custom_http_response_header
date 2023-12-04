@@ -14,7 +14,3 @@ echo "add_header $custom_header_name $custom_header_value;" | sudo tee -a /etc/n
 
 # Reload Nginx to apply the changes
 sudo systemctl reload nginx
-
-# Display a message indicating the successful configuration
-echo "Nginx has been configured to include a custom HTTP header:"
-echo "$custom_header_name: $custom_header_value"
