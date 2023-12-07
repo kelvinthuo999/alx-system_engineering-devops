@@ -3,32 +3,15 @@
 
 # Function to display information about a subdomain
 display_info() {
-    local domain=$1
-    local subdomain=$2
-    local record_type=$(dig +short -t CNAME "$subdomain.$domain" | awk '{print "CNAME"}')
-    local destination=$(dig +short "$subdomain.$domain")
-
-    echo "The subdomain $subdomain is a $record_type record and points to $destination"
+	dig "$1" | grep -A1 'ANSWER SECTION:' | sed -r "s/$1./$2/g" |  awk -F" " ' NR==2 { print "The subdomain " $1 " is a " $4 " record and points to "$5 }'
 }
 
-# Function to audit subdomains
-audit_subdomains() {
-    local domain=$1
-
-    # List of subdomains to audit
-    local subdomains=("www" "lb-01" "web-01" "web-02")
-
-    for subdomain in "${subdomains[@]}"; do
-        display_info "$domain" "$subdomain"
-    done
-}
-
-# Check if both domain and subdomain parameters are provided
-if [ "$#" -eq 2 ]; then
-    display_info "$1" "$2"
-elif [ "$#" -eq 1 ]; then
-    audit_subdomains "$1"
+if [ "$#" -eq 2 ]
+then
+    output "$2.$1" "$2"
 else
-    echo "Usage: $0 <domain> [subdomain]"
-    exit 1
+    output "www.$1" 'www'
+    output "lb-01.$1" 'lb-01'
+    output "web-01.$1" 'web-01'
+    output "web-02.$1" 'web-02'
 fi
