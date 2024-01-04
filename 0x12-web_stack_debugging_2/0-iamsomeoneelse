@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-# This script runs the 'whoami' command under the specified user.
-sudo -u "$1" whoami
