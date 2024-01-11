@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Script to fetch and display DNS information for specified subdomains
+
+print_info () {
+    local subdomain="$1"
+    local domain="$2"
+    local result
+    result=$(dig "$subdomain" | grep -A1 'ANSWER SECTION:' | sed -r "s/$subdomain./$domain/g" | awk -F" " ' NR==2 { print "The subdomain " $1 " is a " $4 " record and points to " $5 }')
+    echo "$result"
+}
+
+if [ "$#" -eq 2 ]; then
+    print_info "$2.$1" "$2"
+else
+    subdomains=("www" "lb-01" "web-01" "web-02")
+    for subdomain in "${subdomains[@]}"; do
+        print_info "$subdomain.$1" "$subdomain"
+    done
+fi
