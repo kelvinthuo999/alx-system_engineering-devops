@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# This script generates a MySQL dump, creates a compressed archive, and follows specified naming conventions.
+
+# Check if the password argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <mysql_password>"
+    exit 1
+fi
+
+# MySQL dump file name
+dump_file="backup.sql"
+
+# Compressed archive name format: day-month-year.tar.gz
+archive_name="$(date +'%d-%m-%Y').tar.gz"
+
+# MySQL root user and password
+mysql_user="root"
+mysql_password="$1"
+
+# Directory to store the dump and archive
+backup_dir="/path/to/backup/directory"
+
+# Create a MySQL dump with all databases
+if mysqldump -u"$mysql_user" -p"$mysql_password" --all-databases > "$backup_dir/$dump_file"; then
+    # Create a compressed archive
+    if tar -czf "$backup_dir/$archive_name" -C "$backup_dir" "$dump_file"; then
+        echo "Backup completed successfully. Archive: $archive_name"
+        # Optionally, you can remove the original dump file to save space
+        # rm "$backup_dir/$dump_file"
+    else
+        echo "Error: Failed to create the compressed archive."
+        exit 1
+    fi
+else
+    echo "Error: Failed to create the MySQL dump."
+    exit 1
+fi
