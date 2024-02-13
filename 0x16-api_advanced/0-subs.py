@@ -19,3 +19,8 @@ def number_of_subscribers(subreddit):
     if response.status_code == 200:
         return response.json().get("data").get("subscribers")
     return 0
+
+# Example usage
+if __name__ == "__main__":
+    subreddit_name = input("Enter the subreddit name: ")
+    print(number_of_subscribers(subreddit_name))
